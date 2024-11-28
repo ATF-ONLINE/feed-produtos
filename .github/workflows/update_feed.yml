@@ -1,0 +1,34 @@
+name: Atualizar Feed
+
+on:
+  schedule:
+    - cron: "0 * * * *" # Atualiza o feed a cada hora
+  workflow_dispatch: # Permite rodar manualmente
+
+jobs:
+  update-feed:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checar Repositório
+        uses: actions/checkout@v3
+
+      - name: Configurar Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.9
+
+      - name: Instalar Dependências
+        run: pip install requests
+
+      - name: Rodar Script Python
+        run: python feedmorris.py
+
+      - name: Commit e Push
+        run: |
+          git config --local user.email "seu-email@example.com"
+          git config --local user.name "Seu Nome"
+          git add feed_produtos.xml
+          git commit -m "Atualização automática do feed"
+          git push
+
